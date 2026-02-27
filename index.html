@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Powerlifting PR Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #111, #222);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .box {
+            background: #1e1e1e;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+        }
+
+        button {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 8px;
+            background: gold;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: orange;
+        }
+
+        .result {
+            margin-top: 15px;
+            font-size: 16px;
+            color: lightgreen;
+        }
+
+        .totalBox {
+            background: #111;
+            border: 2px solid gold;
+        }
+
+        /* Desktop Layout */
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .deadlift {
+                grid-column: 1 / span 2;
+                justify-self: center;
+                width: 48%;
+            }
+
+            .totalBox {
+                grid-column: 1 / span 2;
+                justify-self: center;
+                width: 48%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Powerlifting PR Calculator 💪🔥</h1>
+
+<div class="container">
+
+    <!-- Squat -->
+    <div class="box">
+        <h2>Squat</h2>
+        <input type="number" id="squatWeight" placeholder="Practice Weight (kg)">
+        <input type="number" id="squatReps" placeholder="Reps"><br>
+        <button onclick="calculate('squat')">Check Squat PR</button>
+        <div class="result" id="squatOutput"></div>
+    </div>
+
+    <!-- Bench -->
+    <div class="box">
+        <h2>Bench Press</h2>
+        <input type="number" id="benchWeight" placeholder="Practice Weight (kg)">
+        <input type="number" id="benchReps" placeholder="Reps"><br>
+        <button onclick="calculate('bench')">Check Bench PR</button>
+        <div class="result" id="benchOutput"></div>
+    </div>
+
+    <!-- Deadlift -->
+    <div class="box deadlift">
+        <h2>Deadlift</h2>
+        <input type="number" id="deadliftWeight" placeholder="Practice Weight (kg)">
+        <input type="number" id="deadliftReps" placeholder="Reps"><br>
+        <button onclick="calculate('deadlift')">Check Deadlift PR</button>
+        <div class="result" id="deadliftOutput"></div>
+    </div>
+
+    <!-- Total -->
+    <div class="box totalBox">
+        <h2>Overall SBD Total 🏆</h2>
+        <button onclick="calculateTotal()">Check Total</button>
+        <div class="result" id="totalOutput"></div>
+    </div>
+
+</div>
+
+<script>
+let squatRM = 0;
+let benchRM = 0;
+let deadliftRM = 0;
+
+function calculate(type) {
+
+    let weight = parseFloat(document.getElementById(type + "Weight").value);
+    let reps = parseFloat(document.getElementById(type + "Reps").value);
+
+    if (!weight || !reps) {
+        document.getElementById(type + "Output").innerHTML = "Please enter valid numbers!";
+        return;
+    }
+
+    let oneRM = weight * (1 + reps / 30);
+    let futurePR = oneRM * 1.05;
+
+    if(type === "squat") squatRM = oneRM;
+    if(type === "bench") benchRM = oneRM;
+    if(type === "deadlift") deadliftRM = oneRM;
+
+    document.getElementById(type + "Output").innerHTML =
+        "Estimated Current 1RM: " + oneRM.toFixed(1) + " kg <br>" +
+        "Estimated PR After 1 Month: " + futurePR.toFixed(1) + " kg 🚀";
+}
+
+function calculateTotal() {
+
+    if(squatRM === 0 || benchRM === 0 || deadliftRM === 0) {
+        document.getElementById("totalOutput").innerHTML =
+        "Please calculate all three lifts first!";
+        return;
+    }
+
+    let total = squatRM + benchRM + deadliftRM;
+
+    document.getElementById("totalOutput").innerHTML =
+    "Your Estimated SBD Total: " + total.toFixed(1) + " kg 🏆🔥";
+}
+</script>
+
+</body>
+</html>
